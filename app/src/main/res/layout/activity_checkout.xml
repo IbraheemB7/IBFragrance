@@ -5,25 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".CheckoutActivity">
+    tools:context=".checkout">
 
     <!-- Checkout Title -->
-    <TextView
-        android:id="@+id/checkoutTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Checkout"
-        android:textSize="24sp"
-        android:textColor="#333333"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center" />
 
     <!-- Total Price Section -->
     <TextView
-        android:id="@+id/totalPriceCheckout"
+        android:id="@+id/tvCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Checkout"
+        android:textColor="#333333"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTotalPriceCheckout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Total: $0.00"
@@ -31,14 +33,14 @@
         android:textColor="#FF5722"
         android:textStyle="bold"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/checkoutTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvCheckout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center" />
 
     <!-- Billing Information Section -->
     <TextView
-        android:id="@+id/billingInfoLabel"
+        android:id="@+id/tvBillingInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Billing Information"
@@ -46,7 +48,7 @@
         android:textColor="#333333"
         android:textStyle="bold"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/totalPriceCheckout"
+        app:layout_constraintTop_toBottomOf="@id/tvTotalPriceCheckout"
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Name Field -->
@@ -56,11 +58,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/billingInfoLabel"
+        app:layout_constraintTop_toBottomOf="@id/tvBillingInfo"
         android:hint="Full Name">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/nameEditText"
+            android:id="@+id/etFullName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -79,7 +81,7 @@
         android:hint="Email">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -89,7 +91,7 @@
 
     <!-- Shipping Information Section -->
     <TextView
-        android:id="@+id/shippingInfoLabel"
+        android:id="@+id/tvShippingInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Shipping Information"
@@ -107,11 +109,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shippingInfoLabel"
+        app:layout_constraintTop_toBottomOf="@id/tvShippingInfo"
         android:hint="Shipping Address">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addressEditText"
+            android:id="@+id/etShippingAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPostalAddress"
@@ -130,7 +132,7 @@
         android:hint="Phone Number">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phoneEditText"
+            android:id="@+id/etPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
@@ -140,7 +142,7 @@
 
     <!-- Place Order Button -->
     <Button
-        android:id="@+id/placeOrderButton"
+        android:id="@+id/btnPlaceOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"

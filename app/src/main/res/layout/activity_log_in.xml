@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".LoginActivity">
+   >
 
     <!-- Title Text -->
     <TextView
-        android:id="@+id/loginTitle"
+        android:id="@+id/tvLoginTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome Back!"
@@ -29,15 +29,14 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginTitle">
+        app:layout_constraintTop_toBottomOf="@id/tvLoginTitle">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email"
+            android:id="@+id/etEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:importantForAccessibility="yes"
-            android:contentDescription="Email field"
             android:focusable="true"
             android:hint="Enter your email"
             android:textColorHint="#777777"
@@ -54,26 +53,26 @@
         app:layout_constraintTop_toBottomOf="@id/emailLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password"
+            android:id="@+id/etPasswordLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:importantForAccessibility="yes"
-            android:contentDescription="Password field"
             android:hint="Enter your password"
             android:textColorHint="#777777"
             android:textColor="#000000" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Forgot Password Link -->
-    <TextView
-        android:id="@+id/forgotPasswordLink"
+    <!-- Forgot Password Button -->
+    <Button
+        android:id="@+id/btnForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot Password?"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="14sp"
         android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordLayout"
@@ -81,7 +80,7 @@
 
     <!-- Login Button -->
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/btnLogIn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -91,6 +90,6 @@
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/forgotPasswordLink" />
+        app:layout_constraintTop_toBottomOf="@id/btnForgotPassword" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

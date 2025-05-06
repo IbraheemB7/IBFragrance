@@ -1,5 +1,6 @@
 package IBFragrance.Badran.ibfragrance;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,31 +12,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class products extends AppCompatActivity {
+public class perfume_product extends AppCompatActivity {
 
-    private TextView tvProductName;
-    private TextView tvProductPrice;
-    private ImageView ivProductImage;
-    private Button btnAddToCart;
-    private Button btnYourCart;
+    private ImageView ivProductsImage;
+    private TextView tvProductsName;
+    private TextView tvProductsPrice;
+    private TextView tvProductsQuantity;
+    private Button btnRemoveItem;
 
 
+
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_products);
+        setContentView(R.layout.activity_perfume_product);
 
-        tvProductName = findViewById(R.id.tvProductName);
-        tvProductPrice = findViewById(R.id.tvProductPrice);
-        ivProductImage = findViewById(R.id.ivProductImage);
-        btnAddToCart = findViewById(R.id.btnAddToCart);
-        btnYourCart = findViewById(R.id.btnYourCart);
-
-
-
-
-
+        ivProductsImage = findViewById(R.id.ivProductsImage);
+        tvProductsName = findViewById(R.id.tvProductsName);
+        tvProductsPrice = findViewById(R.id.tvProductsPrice);
+        tvProductsQuantity = findViewById(R.id.tvProductsQuantity);
+        btnRemoveItem = findViewById(R.id.btnRemoveItem);
 
 
 
@@ -46,5 +45,4 @@ public class products extends AppCompatActivity {
 //            return insets;
 //        });
     }
-
 }

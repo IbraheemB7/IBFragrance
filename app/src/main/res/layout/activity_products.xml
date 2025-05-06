@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -8,7 +9,7 @@
 
     <!-- Your Cart Button -->
     <Button
-        android:id="@+id/yourCartButton"
+        android:id="@+id/btnYourCart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your Cart"
@@ -25,7 +26,8 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        tools:ignore="ExtraText">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +37,7 @@
 
             <!-- Product Image -->
             <ImageView
-                android:id="@+id/product_image"
+                android:id="@+id/ivProductImage"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:contentDescription="Product Image"
@@ -44,7 +46,7 @@
 
             <!-- Product Name -->
             <TextView
-                android:id="@+id/product_name"
+                android:id="@+id/tvProductName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -55,22 +57,24 @@
 
             <!-- Product Price -->
             <TextView
-                android:id="@+id/product_price"
+                android:id="@+id/tvProductPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="460.00 ₪"
                 android:textSize="18sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:layout_marginTop="8dp" /> <!-- Added marginTop -->
 
             <!-- Add to Cart Button -->
             <Button
-                android:id="@+id/add_to_cart_button"
+                android:id="@+id/btnAddToCart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="#673AB7"
-                android:text="Add to cart"
-                android:textColor="#000000"  <!-- Purple -->
+                android:text="Add to cart" /> <!-- Purple -->
+            android:text="Add to cart"
+            android:textColor="#000000"
             android:cornerRadius="8dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

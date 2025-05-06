@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'IBFragrance.Badran.ibfragrance'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "IBFragrance.Badran.ibfragrance"

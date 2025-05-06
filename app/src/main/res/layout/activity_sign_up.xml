@@ -18,13 +18,13 @@
         android:layout_marginTop="32dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/firstName"
+            android:id="@+id/etFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="First Name"
             android:inputType="textPersonName"
             android:importantForAccessibility="yes"
-            android:contentDescription="First Name input field" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -39,13 +39,12 @@
         android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/lastName"
+            android:id="@+id/etLastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Last Name"
-            android:inputType="textPersonName"
             android:importantForAccessibility="yes"
-            android:contentDescription="Last Name input field" />
+            android:inputType="textPersonName" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,13 +59,13 @@
         android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/phone"
+            android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Phone Number"
             android:inputType="phone"
             android:importantForAccessibility="yes"
-            android:contentDescription="Phone number input field" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,13 +80,12 @@
         android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email"
+            android:id="@+id/etEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email Address"
             android:inputType="textEmailAddress"
-            android:importantForAccessibility="yes"
-            android:contentDescription="Email input field" />
+            android:importantForAccessibility="yes"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,19 +100,18 @@
         android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password"
+            android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:inputType="textPassword"
             android:importantForAccessibility="yes"
-            android:contentDescription="Password input field" />
+            android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Sign Up Button -->
     <Button
-        android:id="@+id/signUpButton"
+        android:id="@+id/btnSignUp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Sign Up"
@@ -123,25 +120,25 @@
         app:layout_constraintTop_toBottomOf="@id/passwordLayout"
         android:layout_marginTop="32dp"
         android:layout_marginHorizontal="16dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/material_dynamic_primary0"
         android:textColor="@android:color/white"
         android:importantForAccessibility="yes"
         android:contentDescription="Sign Up button" />
 
     <Button
-        android:id="@+id/logInButton2"
+        android:id="@+id/btnLognIn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="32dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/material_dynamic_primary0"
         android:contentDescription="Log in button"
         android:importantForAccessibility="yes"
         android:text="Log In"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signUpButton" />
+        app:layout_constraintTop_toBottomOf="@id/btnSignUp" />
 
     <!-- Log In Button -->
 

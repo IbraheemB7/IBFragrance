@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".CartActivity">
+   >
 
     <!-- Cart Title -->
     <TextView
-        android:id="@+id/cartTitle"
+        android:id="@+id/tvYourCart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -35,7 +35,7 @@
 
         <!-- Total Price Label -->
         <TextView
-            android:id="@+id/cartLabel"
+            android:id="@+id/tvCartSummary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -46,7 +46,7 @@
 
         <!-- Total Price Text -->
         <TextView
-            android:id="@+id/totalPriceText"
+            android:id="@+id/tvTotalPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -58,7 +58,7 @@
 
         <!-- Proceed to Checkout Button -->
         <Button
-            android:id="@+id/checkoutButton"
+            android:id="@+id/btnCheckout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
@@ -69,7 +69,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cartRecyclerView"
+        android:id="@+id/rvCartItems"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:divider="@android:color/darker_gray"
