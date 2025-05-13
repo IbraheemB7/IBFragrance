@@ -21,7 +21,67 @@ public class perfume_product extends AppCompatActivity {
     private Button btnRemoveItem;
 
 
+    public perfume_product() {
+    }
 
+    public perfume_product(ImageView ivProductsImage, TextView tvProductsName, TextView tvProductsPrice, TextView tvProductsQuantity, Button btnRemoveItem) {
+        this.ivProductsImage = ivProductsImage;
+        this.tvProductsName = tvProductsName;
+        this.tvProductsPrice = tvProductsPrice;
+        this.tvProductsQuantity = tvProductsQuantity;
+        this.btnRemoveItem = btnRemoveItem;
+    }
+
+    public ImageView getIvProductsImage() {
+        return ivProductsImage;
+    }
+
+    public void setIvProductsImage(ImageView ivProductsImage) {
+        this.ivProductsImage = ivProductsImage;
+    }
+
+    public TextView getTvProductsName() {
+        return tvProductsName;
+    }
+
+    public void setTvProductsName(TextView tvProductsName) {
+        this.tvProductsName = tvProductsName;
+    }
+
+    public TextView getTvProductsPrice() {
+        return tvProductsPrice;
+    }
+
+    public void setTvProductsPrice(TextView tvProductsPrice) {
+        this.tvProductsPrice = tvProductsPrice;
+    }
+
+    public TextView getTvProductsQuantity() {
+        return tvProductsQuantity;
+    }
+
+    public void setTvProductsQuantity(TextView tvProductsQuantity) {
+        this.tvProductsQuantity = tvProductsQuantity;
+    }
+
+    public Button getBtnRemoveItem() {
+        return btnRemoveItem;
+    }
+
+    public void setBtnRemoveItem(Button btnRemoveItem) {
+        this.btnRemoveItem = btnRemoveItem;
+    }
+
+    @Override
+    public String toString() {
+        return "perfume_product{" +
+                "ivProductsImage=" + ivProductsImage +
+                ", tvProductsName=" + tvProductsName +
+                ", tvProductsPrice=" + tvProductsPrice +
+                ", tvProductsQuantity=" + tvProductsQuantity +
+                ", btnRemoveItem=" + btnRemoveItem +
+                '}';
+    }
 
     @SuppressLint("MissingInflatedId")
     @Override

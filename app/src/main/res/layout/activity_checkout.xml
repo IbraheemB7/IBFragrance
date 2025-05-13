@@ -147,7 +147,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/black"
-        android:cornerRadius="8dp"
         android:text="Place Order"
         android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/phoneLayout"

@@ -12,13 +12,12 @@
         android:id="@+id/btnYourCart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#000000"
+        android:gravity="center"
         android:text="Your Cart"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#000000"
-        android:layout_marginBottom="16dp"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:cornerRadius="8dp" />
+        android:textSize="16sp" />
 
     <!-- Card for Product -->
     <androidx.cardview.widget.CardView
@@ -72,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="#673AB7"
-                android:text="Add to cart" /> <!-- Purple -->
+                android:text="Add To Cart" /> <!-- Purple -->
             android:text="Add to cart"
             android:textColor="#000000"
             android:cornerRadius="8dp" />

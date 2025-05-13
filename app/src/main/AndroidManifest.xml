@@ -13,6 +13,9 @@
         android:theme="@style/Theme.IBFragrance"
         tools:targetApi="31">
         <activity
+            android:name=".splash_screen"
+            android:exported="false" />
+        <activity
             android:name=".perfume_product"
             android:exported="false" />
         <activity

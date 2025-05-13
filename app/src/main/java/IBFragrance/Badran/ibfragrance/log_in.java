@@ -33,19 +33,33 @@ public class log_in extends AppCompatActivity {
         btnForgotPassword = findViewById(R.id.btnForgotPassword);
 
 
-
-
-
-
-
-
-
 //      ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //          Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 //          v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
  //         return insets;
  //       });
     }
+
+
+    private boolean readAndValidateFields(){
+        String email = etEmailAddress.getText().toString().trim();
+        String password = etPasswordLogin.getText().toString().trim();
+
+        if(email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            etEmailAddress.setError("Invalid email");
+            return false;
+        }
+
+        if(password.length() < 6){
+            etPasswordLogin.setError("Password must be at least 6 characters");
+            return false;
+        }
+
+        //TODO: add your code to save the fields
+        return true;
+    }
+
+
 
 
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "435279555232",
+    "project_id": "ibfragrance-3ddea",
+    "storage_bucket": "ibfragrance-3ddea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435279555232:android:d4fd93122b5a11a42477c5",
+        "android_client_info": {
+          "package_name": "IBFragrance.Badran.ibfragrance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm12B4Q5TlbHtiduBYXa3nU-tscmYb1Lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

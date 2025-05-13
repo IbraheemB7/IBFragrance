@@ -39,18 +39,44 @@ public class checkout extends AppCompatActivity {
         etPhoneNumber=findViewById(R.id.etPhoneNumber);
         btnPlaceOrder=findViewById(R.id.btnPlaceOrder);
 
-
-
-
-
-
-
-
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 //            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 //            return insets;
 //        });
+    }
+
+
+    private boolean readAndValidateFields() {
+        String fullName = etFullName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String shippingAddress = etShippingAddress.getText().toString().trim();
+        String phoneNumber = etPhoneNumber.getText().toString().trim();
+
+        if (fullName.isEmpty()) {
+            etFullName.setError("Full name is required");
+            return false;
+        }
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Valid email is required");
+            return false;
+        }
+
+        if (shippingAddress.isEmpty()) {
+            etShippingAddress.setError("Shipping address is required");
+            return false;
+        }
+
+        if (phoneNumber.isEmpty() || phoneNumber.length() < 10) {
+            etPhoneNumber.setError("Valid phone number is required");
+            return false;
+        }
+
+        // Prepare to save
+        // You can add code here to save the data to your database or server
+
+        return true;
     }
 
 }
