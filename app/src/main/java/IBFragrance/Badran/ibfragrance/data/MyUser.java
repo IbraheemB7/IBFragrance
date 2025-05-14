@@ -6,14 +6,17 @@ public class MyUser {
     private String email;
     private String password;
     private String phone;
+    private String id;
 
 // Constructor with all fields
-public MyUser(String firstName, String lastName, String email, String password, String phone) {
+public MyUser(String firstName, String lastName, String email, String password, String phone, String id) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
     this.phone = phone;
+    this.id = id;
+
 }
 
 // Constructor with no arguments
@@ -60,6 +63,15 @@ public String getPhone() {
 public void setPhone(String phone) {
     this.phone = phone;
 }
+
+public String getID() {
+    return this.id;
+}
+public void setID(String id) {
+    this.id = id;
+}
+
+
 
 // toString method
 @Override

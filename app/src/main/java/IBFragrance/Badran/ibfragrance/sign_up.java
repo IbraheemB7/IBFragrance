@@ -21,6 +21,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import IBFragrance.Badran.ibfragrance.data.MyUser;
 
 public class sign_up extends AppCompatActivity {
 
@@ -53,12 +56,7 @@ public class sign_up extends AppCompatActivity {
             Intent intent = new Intent(sign_up.this, log_in.class);
             startActivity(intent);
 });
-        btnSignUp.setOnClickListener(v -> {
-            // Check if the fields are valid
-            if (!readAndValidateFields()) {
-                Toast.makeText(this, "Sign-up not successful!", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
 
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -116,10 +114,7 @@ private void readAndValidateFields() {
                             Log.d("SignUpActivity", "createUserWithEmail:success");
                             FirebaseUser user = auth.getCurrentUser();
                             // Navigate to the main activity
-                            Intent intent = new Intent(sign_up.this, products.class);
-                            startActivity(intent);
-
-                            finish();// Close the sign-up activity after a successful sign-up
+                            saveUser_FB(firstName, lastName, emailAddress, password, phone);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("SignUpActivity", "createUserWithEmail:failure", task.getException());
@@ -130,6 +125,36 @@ private void readAndValidateFields() {
                 });
     }
 }
+
+    MyUser user = new MyUser();
+    private void saveUser_FB(String firstName, String lastName, String emailAddress, String password, String phone) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(emailAddress);
+        user.setPassword(password);
+        user.setPhone(phone);
+        user.setID(uid);
+
+
+
+        db.collection("MyUsers").document(uid).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                {
+                    Toast.makeText(sign_up.this, "Succeeded to add user", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                else
+                {
+                    Toast.makeText(sign_up.this, "Failed to add user", Toast.LENGTH_SHORT).show();
+                }
+                }
+      });
+    }
+
 
 
 }
