@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import IBFragrance.Badran.ibfragrance.data.MyUser;
@@ -128,7 +130,8 @@ private void readAndValidateFields() {
 
     MyUser user = new MyUser();
     private void saveUser_FB(String firstName, String lastName, String emailAddress, String password, String phone) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference usersRef = database.child("users");
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -137,22 +140,17 @@ private void readAndValidateFields() {
         user.setPhone(phone);
         user.setID(uid);
 
-
-
-        db.collection("MyUsers").document(uid).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        usersRef.child(uid).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     Toast.makeText(sign_up.this, "Succeeded to add user", Toast.LENGTH_SHORT).show();
                     finish();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(sign_up.this, "Failed to add user", Toast.LENGTH_SHORT).show();
                 }
-                }
-      });
+            }
+        });
     }
 
 

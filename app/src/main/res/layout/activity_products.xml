@@ -8,6 +8,12 @@
     android:padding="16dp">
 
     <!-- Your Cart Button -->
+    <ImageView
+        android:id="@+id/ivSelectedImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <Button
         android:id="@+id/btnYourCart"
         android:layout_width="match_parent"

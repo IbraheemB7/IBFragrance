@@ -1,5 +1,15 @@
 package IBFragrance.Badran.ibfragrance.data;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.core.Tag;
+
+import IBFragrance.Badran.ibfragrance.sign_up;
+
 public class MyUser {
     private String firstName;
     private String lastName;
@@ -18,6 +28,9 @@ public MyUser(String firstName, String lastName, String email, String password, 
     this.id = id;
 
 }
+
+
+
 
 // Constructor with no arguments
 public MyUser() {
