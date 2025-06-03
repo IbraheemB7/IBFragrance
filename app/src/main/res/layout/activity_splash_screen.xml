@@ -7,14 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".splash_screen">
 
-    <ImageButton
-        android:id="@+id/imgBtn1"
+    <ImageView
+        android:id="@+id/ivLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ibflogonoback1024" />
+        app:srcCompat="@drawable/ibflogonoback1024"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/tvLoading"

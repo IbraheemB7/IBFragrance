@@ -27,7 +27,7 @@ public class splash_screen extends AppCompatActivity {
     private final int IMAGE_PICK_CODE=100; // كود مخصص لطلب اختيار صورة
     private final int PERMISSION_CODE=101; // كود مخصص لطلب صلاحيات
 
-    private ImageButton imgBtn1; // زر الصورة
+    private ImageButton ivLogo;
     private Button btnUpload; // زر الرفع
     private Uri toUploadimageUri; // مسار الصورة المراد رفعها
     private Uri downloaduri; // مسار الصورة بعد الرفع
@@ -68,6 +68,8 @@ public class splash_screen extends AppCompatActivity {
     }
 
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -92,14 +94,34 @@ public class splash_screen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
 
-        imgBtn1 = findViewById(R.id.imgBtn1);
-        imgBtn1.setOnClickListener(new View.OnClickListener() {
+        ivLogo = findViewById(R.id.ivLogo);
+        ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkPermission();
             }
         });
 
+
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    // ننتظر 3 ثواني
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // بعد 3 ثواني، ننتقل إلى شاشة التسجيل
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(splash_screen.this, sign_up.class));
+                    }
+                });
+            }
+        };
+        thread.start();
 
 
 

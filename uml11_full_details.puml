@@ -1,0 +1,206 @@
+@startuml
+class IBFragrance.Badran.ibfragrance.cart {
+- TextView tvYourCart
+- TextView tvCartSummary
+- TextView tvTotalPrice
+- Button btnCheckout
+- RecyclerView rvCartItems
+- LinearLayout totalSectionLayout
+# void onCreate(Bundle)
+}
+
+
+class IBFragrance.Badran.ibfragrance.settings {
+# void onCreate(Bundle)
+}
+
+class IBFragrance.Badran.ibfragrance.data.MyUser {
+- String firstName
+- String lastName
+- String email
+- String password
+- String phone
+- String id
++ String getFirstName()
++ void setFirstName(String)
++ String getLastName()
++ void setLastName(String)
++ String getEmail()
++ void setEmail(String)
++ String getPassword()
++ void setPassword(String)
++ String getPhone()
++ void setPhone(String)
++ String getID()
++ void setID(String)
++ String toString()
+}
+
+note left of IBFragrance.Badran.ibfragrance.data.MyUser::getFirstName()
+ Getters and Setters
+end note
+note right of IBFragrance.Badran.ibfragrance.data.MyUser::toString()
+ toString method
+end note
+
+class IBFragrance.Badran.ibfragrance.MainActivity {
+# void onCreate(Bundle)
+}
+
+class IBFragrance.Badran.ibfragrance.log_in {
+- TextView tvLoginTitle
+- EditText etEmailAddress
+- EditText etPasswordLogin
+- Button btnLogIn
+- Button btnForgotPassword
+# void onCreate(Bundle)
+- boolean readAndValidateFieldsValues()
+- void checkEmailPassw_FB()
+}
+
+note left of IBFragrance.Badran.ibfragrance.log_in::readAndValidateFieldsValues()
+
+     * Reads and validates the values of the email and password fields.
+     *
+     * @return true if all fields are valid, false otherwise
+     
+end note
+note right of IBFragrance.Badran.ibfragrance.log_in::checkEmailPassw_FB()
+
+     * Checks the email and password fields against Firebase Authentication.
+     
+end note
+
+class IBFragrance.Badran.ibfragrance.sign_up {
+- EditText etFirstName
+- EditText etLastName
+- EditText etEmailAddress
+- EditText etPassword
+- EditText etPhone
+- Button btnSignUp
+- Button btnLogIn
+~ MyUser user
+# void onCreate(Bundle)
+- void readAndValidateFields()
+- void saveUser_FB(String,String,String,String,String)
+}
+
+
+class IBFragrance.Badran.ibfragrance.splash_screen {
+- TextView tvLoading
+- int IMAGE_PICK_CODE
+- int PERMISSION_CODE
+- ImageButton ivLogo
+- Button btnUpload
+- Uri toUploadimageUri
+- Uri downloaduri
+- perfume_product perfume
+- void pickImageFromGallery()
+- void checkPermission()
+# void onActivityResult(int,int,Intent)
++ void onRequestPermissionsResult(int,String[],int[])
+# void onCreate(Bundle)
+}
+note left of IBFragrance.Badran.ibfragrance.splash_screen::IMAGE_PICK_CODE
+ كود مخصص لطلب اختيار صورة
+end note
+note right of IBFragrance.Badran.ibfragrance.splash_screen::PERMISSION_CODE
+ كود مخصص لطلب صلاحيات
+end note
+note left of IBFragrance.Badran.ibfragrance.splash_screen::btnUpload
+ زر الرفع
+end note
+note right of IBFragrance.Badran.ibfragrance.splash_screen::toUploadimageUri
+ مسار الصورة المراد رفعها
+end note
+note left of IBFragrance.Badran.ibfragrance.splash_screen::downloaduri
+ مسار الصورة بعد الرفع
+end note
+note right of IBFragrance.Badran.ibfragrance.splash_screen::perfume
+ عنصر من نوع perfume_product
+end note
+
+
+class IBFragrance.Badran.ibfragrance.checkout {
+- TextView tvCheckout
+- TextView tvTotalPriceCheckout
+- TextView tvBillingInfo
+- TextInputEditText etFullName
+- TextInputEditText etEmail
+- TextView tvShippingInfo
+- TextInputEditText etShippingAddress
+- TextInputEditText etPhoneNumber
+- Button btnPlaceOrder
+# void onCreate(Bundle)
+- boolean readAndValidateFields()
+}
+
+
+class IBFragrance.Badran.ibfragrance.products {
+- {static} String TAG
+- TextView tvProductName
+- TextView tvProductPrice
+- ImageView ivProductImage
+- Button btnAddToCart
+- Button btnYourCart
+- ImageView ivSelectedImage
+- Uri selectedImageUri
+- ActivityResultLauncher<String> pickImage
+- ActivityResultLauncher<String> requestReadMediaImagesPermission
+- ActivityResultLauncher<String> requestReadMediaVideoPermission
+- ActivityResultLauncher<String> requestReadExternalStoragePermission
++ boolean onCreateOptionsMenu(Menu)
++ boolean onOptionsItemSelected(MenuItem)
+- void checkAndRequestPermissions()
+# void onCreate(Bundle)
+}
+note left of IBFragrance.Badran.ibfragrance.products::ivSelectedImage
+ لعرض الصورة
+end note
+note right of IBFragrance.Badran.ibfragrance.products::selectedImageUri
+ لحفظ رابط الصورة المختارة
+end note
+note left of IBFragrance.Badran.ibfragrance.products::pickImage
+ مشغل اختيار الصور
+end note
+note right of IBFragrance.Badran.ibfragrance.products::requestReadMediaImagesPermission
+ مُشغّلات لطلب الأذونات
+end note
+
+note left of IBFragrance.Badran.ibfragrance.products::checkAndRequestPermissions()
+ دالة لفحص وطلب الأذونات
+end note
+
+class IBFragrance.Badran.ibfragrance.perfume_product {
+- ImageView ivProductsImage
+- TextView tvProductsName
+- TextView tvProductsPrice
+- TextView tvProductsQuantity
+- Button btnRemoveItem
++ ImageView getIvProductsImage()
++ void setIvProductsImage(ImageView)
++ TextView getTvProductsName()
++ void setTvProductsName(TextView)
++ TextView getTvProductsPrice()
++ void setTvProductsPrice(TextView)
++ TextView getTvProductsQuantity()
++ void setTvProductsQuantity(TextView)
++ Button getBtnRemoveItem()
++ void setBtnRemoveItem(Button)
++ String toString()
+# void onCreate(Bundle)
+}
+
+
+
+
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.cart
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.settings
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.MainActivity
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.log_in
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.sign_up
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.splash_screen
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.checkout
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.products
+androidx.appcompat.app.AppCompatActivity <|-- IBFragrance.Badran.ibfragrance.perfume_product
+@enduml

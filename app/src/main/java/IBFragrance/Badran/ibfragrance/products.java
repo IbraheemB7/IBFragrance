@@ -20,9 +20,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class products extends AppCompatActivity {
 
@@ -52,12 +49,12 @@ public class products extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.itmProfile) {
-            Toast.makeText(this, "Profile Opened Successfully", Toast.LENGTH_SHORT).show();
+        if (id == R.id.itmLogOut) {
+            Toast.makeText(this, "LoggedOut Successfully", Toast.LENGTH_SHORT).show();
             return true;
 
         } else if (id == R.id.itmSettings) {
-            Intent i = new Intent(products.this, settings.class); // غير "settings.class" إذا اسم الأكتيفيتي مختلف
+            Intent i = new Intent(products.this, settings.class);
             startActivity(i);
             return true;
 
