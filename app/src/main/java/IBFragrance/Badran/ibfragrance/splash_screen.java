@@ -21,118 +21,89 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class splash_screen extends AppCompatActivity {
 
-    private TextView tvLoading;
+    private TextView tvLoading;   // عنصر نصي لعرض حالة التحميل
 
+    private final int IMAGE_PICK_CODE = 100;   // كود لطلب اختيار صورة من المعرض
+    private final int PERMISSION_CODE = 101;   // كود لطلب صلاحية الوصول للملفات
 
-    private final int IMAGE_PICK_CODE=100; // كود مخصص لطلب اختيار صورة
-    private final int PERMISSION_CODE=101; // كود مخصص لطلب صلاحيات
+    private ImageButton ivLogo;    // زر صورة (لوجو) - غير مستخدم حاليا
+    private Button btnUpload;      // زر رفع صورة - غير مستخدم حاليا
+    private Uri toUploadimageUri;  // رابط الصورة المراد رفعها - غير مستخدم حاليا
+    private Uri downloaduri;       // رابط الصورة بعد الرفع - غير مستخدم حاليا
 
-    private ImageButton ivLogo;
-    private Button btnUpload; // زر الرفع
-    private Uri toUploadimageUri; // مسار الصورة المراد رفعها
-    private Uri downloaduri; // مسار الصورة بعد الرفع
+    private perfume_product perfume; // عنصر كائن من نوع perfume_product - غير مستخدم حاليا
 
-    private perfume_product perfume; // عنصر من نوع perfume_product
-
+    // دالة لفتح المعرض لاختيار صورة
     private void pickImageFromGallery() {
-        // Intent ضمني لاختيار صورة
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_CODE);
+        Intent intent = new Intent(Intent.ACTION_PICK);  // إنشاء نية (Intent) لاختيار صورة
+        intent.setType("image/*");                        // تحديد نوع الملف المطلوب: صورة فقط
+        startActivityForResult(intent, IMAGE_PICK_CODE);  // بدء النشاط مع كود الطلب
     }
 
+    // دالة لفحص صلاحية قراءة التخزين وطلبها إذا لم تمنح
     private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  // فقط للأندرويد 6 أو أحدث
             if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-
+                    == PackageManager.PERMISSION_DENIED) {      // إذا لم تمنح الصلاحية
                 String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE};
-                requestPermissions(permissions, PERMISSION_CODE); // نطلب الصلاحية
+                requestPermissions(permissions, PERMISSION_CODE);  // نطلب الصلاحية من المستخدم
             } else {
-                pickImageFromGallery(); // الصلاحية موجودة، نفتح المعرض
+                pickImageFromGallery();  // الصلاحية موجودة مسبقاً، نفتح المعرض مباشرة
             }
         } else {
-            pickImageFromGallery(); // الجهاز قديم، نفتح المعرض مباشرة
+            pickImageFromGallery();      // للإصدارات الأقدم من 6، نفتح المعرض مباشرة
         }
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            toUploadimageUri = data.getData(); // نحفظ URI للصورة
-            imgBtn1.setImageURI(toUploadimageUri); // نعرض الصورة في الزر
-        }
-    }
-
-
-
-
+    // التعامل مع نتيجة طلب الصلاحية
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSION_CODE) {
+        if (requestCode == PERMISSION_CODE) {  // إذا كان الرد لطلب صلاحية القراءة
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // تم منح الصلاحية
+                // تم منح الصلاحية، نفتح المعرض لاختيار صورة
                 pickImageFromGallery();
             } else {
-                // تم رفض الصلاحية
+                // رفض الصلاحية، نظهر رسالة للمستخدم
                 Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-
-
+    // نقطة البداية عند إنشاء النشاط
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_splash_screen);
+        EdgeToEdge.enable(this);                    // تفعيل العرض من الحافة للحافة
+        setContentView(R.layout.activity_splash_screen); // ربط الشاشة بملف التصميم
 
-
-        ivLogo = findViewById(R.id.ivLogo);
-        ivLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkPermission();
-            }
-        });
-
-
+        // إنشاء Thread جديد لانتظار 3 ثواني قبل الانتقال للشاشة التالية
         Thread thread = new Thread() {
             @Override
             public void run() {
                 try {
-                    // ننتظر 3 ثواني
-                    Thread.sleep(3000);
+                    Thread.sleep(3000); // الانتظار 3 ثواني (3000 مللي ثانية)
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    e.printStackTrace(); // طباعة الخطأ في حالة حصول مقاطعة
                 }
-                // بعد 3 ثواني، ننتقل إلى شاشة التسجيل
+                // بعد انتهاء الانتظار، تنفيذ كود تغيير الشاشة في الواجهة الرئيسية (UI thread)
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // الانتقال إلى شاشة التسجيل (sign_up)
                         startActivity(new Intent(splash_screen.this, sign_up.class));
                     }
                 });
             }
         };
-        thread.start();
+        thread.start();  // بدء تنفيذ Thread الانتظار
 
-
-
-        tvLoading = findViewById(R.id.tvLoading);
-
-
-
- //       ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
- //           Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
- //           v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
- //           return insets;
- //       });
+        // كود التعامُل مع الـ window insets (معطل مؤقتاً)
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
     }
 }

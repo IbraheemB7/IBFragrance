@@ -126,7 +126,7 @@
         android:contentDescription="Sign Up button" />
 
     <Button
-        android:id="@+id/btnLognIn"
+        android:id="@+id/btn_LogIn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
