@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 // استيراد مكتبات لدعم الحواف في الواجهة (الكود تبعها غير مفعل حالياً)
 
 public class perfume_product extends AppCompatActivity {
-    // تعريف كلاس يمثل واجهة عرض منتج عطر
+    // تعريف كلاس يمثل واجهة عرض منتج عطراس
 
     // عناصر الواجهة (صورة، اسم، سعر، كمية، زر إزالة)
     private ImageView ivProductsImage;
@@ -24,6 +24,9 @@ public class perfume_product extends AppCompatActivity {
     private TextView tvProductsPrice;
     private TextView tvProductsQuantity;
     private Button btnRemoveItem;
+
+    private Button btnAddPerfume;
+
 
     // منشئ فارغ (مطلوب إذا بدك تستخدم الكلاس كـ Activity)
     public perfume_product() {

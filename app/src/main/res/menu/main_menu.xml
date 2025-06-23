@@ -7,10 +7,5 @@
         android:icon="@drawable/_522516"
         android:title="Profile"
         app:showAsAction="always|withText" />
-    <item
-        android:id="@+id/itmSettings"
-        android:icon="@drawable/_26472"
-        android:title="Settings"
-        app:showAsAction="always|withText" />
 </menu>
 

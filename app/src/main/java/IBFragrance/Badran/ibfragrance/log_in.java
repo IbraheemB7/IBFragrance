@@ -100,7 +100,7 @@ public class log_in extends AppCompatActivity {
                                 FirebaseUser user = auth.getCurrentUser(); // المستخدم الحالي
 
                                 // الانتقال للصفحة الرئيسية
-                                Intent intent = new Intent(log_in.this, MainActivity.class);
+                                Intent intent = new Intent(log_in.this, products.class);
                                 startActivity(intent);
                                 finish(); // إنهاء صفحة تسجيل الدخول
                             } else {

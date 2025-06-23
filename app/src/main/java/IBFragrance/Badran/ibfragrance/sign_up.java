@@ -1,3 +1,4 @@
+
 package IBFragrance.Badran.ibfragrance;
 
 import android.annotation.SuppressLint;
@@ -122,7 +123,7 @@ public class sign_up extends AppCompatActivity {
                                 saveUser_FB(firstName, lastName, emailAddress, password, phone);
                             } else {
                                 Log.w("SignUpActivity", "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(sign_up.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(sign_up.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });

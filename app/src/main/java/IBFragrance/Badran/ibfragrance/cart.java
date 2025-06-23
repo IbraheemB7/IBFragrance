@@ -1,92 +1,101 @@
 package IBFragrance.Badran.ibfragrance;
-// تعريف الباكيج (المجلد البرمجي) اللي فيه هذا الكلاس
 
 import android.content.Intent;
-// استيراد كلاس Intent اللي بستخدم لفتح نشاط (Activity) ثاني
-
 import android.os.Bundle;
-// لاستقبال البيانات عند إنشاء النشاط
-
-import android.view.View;
-// للتعامل مع مكونات الشاشة
-
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-// استيراد العناصر المستخدمة من الواجهة: زر، تخطيط، نصوص
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-// لتفعيل عرض الشاشة من الحافة للحافة
-
 import androidx.appcompat.app.AppCompatActivity;
-// الكلاس الأساسي اللي كل Activity لازم ترث منه
-
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-// مكتبات للتعامل مع هوامش الشاشة (تم تعطيلها في الكود لاحقًا)
-
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-// لاستيراد قائمة عرض العناصر (RecyclerView) للسلة
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import IBFragrance.Badran.ibfragrance.data.CartAdapter;
+import IBFragrance.Badran.ibfragrance.data.Perfume;
 
 public class cart extends AppCompatActivity {
-// تعريف كلاس cart وهو صفحة السلة، ووراثته من AppCompatActivity
 
-    private TextView tvYourCart;
-    private TextView tvCartSummary;
     private TextView tvTotalPrice;
     private Button btnCheckout;
     private RecyclerView rvCartItems;
-    private LinearLayout totalSectionLayout;
-    // تعريف العناصر الموجودة في واجهة السلة وربطها لاحقًا بملف XML
+
+    private List<Perfume> cartItems = new ArrayList<>();
+    private CartAdapter cartAdapter;
+
+    private FirebaseAuth auth;
+    private DatabaseReference databaseRef;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // استدعاء دالة onCreate عند فتح الصفحة
 
         EdgeToEdge.enable(this);
-        // تفعيل خاصية عرض الواجهة من حافة الشاشة لحافتها (للتصميم الحديث)
-
         setContentView(R.layout.activity_cart);
-        // ربط هذا الكلاس بواجهة XML الخاصة به: activity_cart.xml
-
-        tvYourCart = findViewById(R.id.tvYourCart);
-        // ربط عنصر عنوان السلة من الواجهة
-
-        tvCartSummary = findViewById(R.id.tvCartSummary);
-        // ربط نص الملخص من الواجهة
 
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
-        // ربط النص اللي بعرض السعر الإجمالي
-
         btnCheckout = findViewById(R.id.btnCheckout);
-        // ربط زر الدفع/الإتمام
-
         rvCartItems = findViewById(R.id.rvCartItems);
-        // ربط الـ RecyclerView اللي بعرض عناصر السلة
 
-        totalSectionLayout = findViewById(R.id.totalSectionLayout);
-        // ربط القسم السفلي اللي فيه السعر الإجمالي وغيره
+        rvCartItems.setLayoutManager(new LinearLayoutManager(this));
+        cartAdapter = new CartAdapter(this, cartItems);
+        rvCartItems.setAdapter(cartAdapter);
 
-        btnCheckout.setOnClickListener(new View.OnClickListener() {
+        auth = FirebaseAuth.getInstance();
+        databaseRef = FirebaseDatabase.getInstance().getReference();
+
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "الرجاء تسجيل الدخول لعرض السلة", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        uid = auth.getCurrentUser().getUid();
+
+        loadCartItems();
+
+        btnCheckout.setOnClickListener(v -> {
+            Intent intent = new Intent(cart.this, checkout.class);
+            startActivity(intent);
+        });
+    }
+
+    private void loadCartItems() {
+        databaseRef.child("cart").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(cart.this, checkout.class);
-                // إنشاء Intent للانتقال إلى صفحة الدفع checkout
+            public void onDataChange(DataSnapshot snapshot) {
+                cartItems.clear();
+                double total = 0;
 
-                startActivity(intent);
-                // بدء النشاط الجديد (فتح صفحة الدفع)
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    Perfume perfume = itemSnapshot.getValue(Perfume.class);
+                    if (perfume != null) {
+                        cartItems.add(perfume);
+
+                        // حساب السعر الإجمالي (افتراضياً السعر نص String, تحتاج تحويل)
+                        try {
+                            total += Double.parseDouble(perfume.getPrice());
+                        } catch (NumberFormatException e) {
+                            // إذا السعر مش عدد صالح، تجاهل أو تعامل مع الخطأ
+                        }
+                    }
+                }
+
+                cartAdapter.notifyDataSetChanged();
+                tvTotalPrice.setText(String.format("السعر الإجمالي: %.2f ₪", total));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(cart.this, "خطأ في تحميل بيانات السلة: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        // الكود التالي تم تعليقه (مش شغال حاليًا)
-        // وظيفته كانت تعديل الحواف الخارجية للواجهة لتتناسب مع شاشات مختلفة
-
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
     }
 }
