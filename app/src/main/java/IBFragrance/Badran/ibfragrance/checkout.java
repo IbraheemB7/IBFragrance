@@ -1,25 +1,20 @@
 package IBFragrance.Badran.ibfragrance;
-// تعريف الباكيج (المجلد البرمجي) اللي فيه الكلاس
 
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-// استيراد عناصر واجهة المستخدم: أزرار ونصوص
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-// مكتبات لدعم الهوامش الحديثة للشاشة (تم تعطيلها لاحقًا)
 
 import com.google.android.material.textfield.TextInputEditText;
-// استيراد عنصر إدخال النص من Material Design
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class checkout extends AppCompatActivity {
-// تعريف كلاس صفحة الدفع "checkout" ووراثته من AppCompatActivity
 
-    // تعريف عناصر الواجهة المستخدمة في الصفحة
     private TextView tvCheckout;
     private TextView tvTotalPriceCheckout;
     private TextView tvBillingInfo;
@@ -30,18 +25,16 @@ public class checkout extends AppCompatActivity {
     private TextInputEditText etPhoneNumber;
     private Button btnPlaceOrder;
 
+    private FirebaseAuth auth;
+    private DatabaseReference ordersRef;
+    private String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // استدعاء عند إنشاء الصفحة
-
         EdgeToEdge.enable(this);
-        // تفعيل عرض المحتوى من الحافة للحافة (تصميم حديث)
-
         setContentView(R.layout.activity_checkout);
-        // ربط هذا الكلاس بواجهة XML الخاصة به: activity_checkout.xml
 
-        // ربط كل عنصر في الكود بالعناصر الموجودة في ملف XML
         tvCheckout = findViewById(R.id.tvCheckout);
         tvTotalPriceCheckout = findViewById(R.id.tvTotalPriceCheckout);
         tvBillingInfo = findViewById(R.id.tvBillingInfo);
@@ -52,47 +45,94 @@ public class checkout extends AppCompatActivity {
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
 
-        // الكود التالي غير مفعل حالياً، وظيفته تعديل الهوامش لتتناسب مع حواف الشاشة
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        uid = auth.getCurrentUser().getUid();
+        ordersRef = FirebaseDatabase.getInstance().getReference("orders").child(uid);
+
+        // عرض السعر المرسل من صفحة السلة
+        double totalPrice = getIntent().getDoubleExtra("TOTAL_PRICE", 0.0);
+        tvTotalPriceCheckout.setText(String.format("Total Price: %.2f ₪", totalPrice));
+
+        btnPlaceOrder.setOnClickListener(v -> {
+            if (!readAndValidateFields()) return;
+            placeOrder(totalPrice);
+        });
     }
 
-    // دالة خاصة لقراءة القيم من الحقول والتحقق من صحتها
     private boolean readAndValidateFields() {
-        // استخراج النص من كل حقل وإزالة الفراغات الزائدة
         String fullName = etFullName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String shippingAddress = etShippingAddress.getText().toString().trim();
         String phoneNumber = etPhoneNumber.getText().toString().trim();
 
-        // التحقق إذا الاسم فارغ
         if (fullName.isEmpty()) {
-            etFullName.setError("Full name is required");
+            etFullName.setError("الاسم الكامل مطلوب");
             return false;
         }
-
-        // التحقق من صحة الإيميل باستخدام pattern جاهز
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Valid email is required");
+            etEmail.setError("الإيميل غير صالح");
             return false;
         }
-
-        // التحقق من عنوان الشحن
         if (shippingAddress.isEmpty()) {
-            etShippingAddress.setError("Shipping address is required");
+            etShippingAddress.setError("عنوان الشحن مطلوب");
             return false;
         }
-
-        // التحقق من رقم الهاتف وطوله
         if (phoneNumber.isEmpty() || phoneNumber.length() < 10) {
-            etPhoneNumber.setError("Valid phone number is required");
+            etPhoneNumber.setError("رقم هاتف صالح مطلوب");
             return false;
         }
+        return true;
+    }
 
+    private void placeOrder(double totalPrice) {
+        String fullName = etFullName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String shippingAddress = etShippingAddress.getText().toString().trim();
+        String phoneNumber = etPhoneNumber.getText().toString().trim();
 
-        return true; // رجوع بقيمة true إذا كل الحقول صحيحة
+        String orderId = ordersRef.push().getKey();
+        if (orderId == null) {
+            Toast.makeText(this, "خطأ في إنشاء معرف الطلب", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Order order = new Order(fullName, email, shippingAddress, phoneNumber, totalPrice, System.currentTimeMillis());
+
+        ordersRef.child(orderId).setValue(order)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "تم تقديم الطلب بنجاح!", Toast.LENGTH_LONG).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "فشل تقديم الطلب: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    // كلاس مساعد لتعريف الطلب
+    public static class Order {
+        public String fullName;
+        public String email;
+        public String shippingAddress;
+        public String phoneNumber;
+        public double totalPrice;
+        public long timestamp;
+
+        public Order() {
+            // مطلوب من Firebase
+        }
+
+        public Order(String fullName, String email, String shippingAddress, String phoneNumber, double totalPrice, long timestamp) {
+            this.fullName = fullName;
+            this.email = email;
+            this.shippingAddress = shippingAddress;
+            this.phoneNumber = phoneNumber;
+            this.totalPrice = totalPrice;
+            this.timestamp = timestamp;
+        }
     }
 }

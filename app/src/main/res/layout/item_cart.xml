@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:gravity="center_vertical">
 
     <ImageView
         android:id="@+id/ivCartImage"
@@ -37,4 +38,24 @@
             android:textColor="#FF5722" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnAddToCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to Cart"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:padding="8dp"/>
+
+    <Button
+        android:id="@+id/btnRemoveFromCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remove"
+        android:backgroundTint="#F44336"
+        android:textColor="#FFFFFF"
+        android:padding="8dp"
+        android:visibility="gone"/>
+
 </LinearLayout>

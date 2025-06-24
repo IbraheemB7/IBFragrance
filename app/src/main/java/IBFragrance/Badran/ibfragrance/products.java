@@ -6,59 +6,66 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import IBFragrance.Badran.ibfragrance.data.CartAdapter;
 import IBFragrance.Badran.ibfragrance.data.Perfume;
 
 public class products extends AppCompatActivity {
 
-    private static final String TAG = "products";
-
-    // عناصر الواجهة
-    private TextView tvProductName, tvProductPrice;
     private ImageView ivSelectedImage;
     private Button btnAddPerfume, btnYourCart, btnSelectImage;
     private ProgressBar progressBarUpload;
-
-    // بدال TextView
     private EditText etProductName, etProductPrice;
-
 
     private Uri selectedImageUri;
 
-    // Launchers لنتيجة اختيار الصورة وأذونات التخزين
+    private RecyclerView rvPerfumes;
+    private CartAdapter adapter;
+    private List<Perfume> perfumeList = new ArrayList<>();
+
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private DatabaseReference databaseRef;
+    private DatabaseReference cartRef;
+
+    private FirebaseAuth auth;
+    private String uid;
+
     private ActivityResultLauncher<String> pickImage;
     private ActivityResultLauncher<String> requestReadMediaImagesPermission;
     private ActivityResultLauncher<String> requestReadMediaVideoPermission;
     private ActivityResultLauncher<String> requestReadExternalStoragePermission;
 
-    // مراجع Firebase
-    private FirebaseStorage storage;
-    private StorageReference storageRef;
-    private DatabaseReference databaseRef;
+    private Set<String> cartPerfumeIds = new HashSet<>(); // لتخزين IDs المنتجات الموجودة بالسلة
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -67,39 +74,56 @@ public class products extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_products);
 
-        // إعداد التولبار
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        // ربط العناصر بالواجهة
         ivSelectedImage = findViewById(R.id.ivSelectedImage);
-        tvProductName = findViewById(R.id.tvProductName);
-        tvProductPrice = findViewById(R.id.tvProductPrice);
-        btnAddPerfume = findViewById(R.id.btnAddPerfume);  // زر إضافة عطر جديد
+        btnAddPerfume = findViewById(R.id.btnAddPerfume);
         btnYourCart = findViewById(R.id.btnYourCart);
         btnSelectImage = findViewById(R.id.btnSelectImage);
         progressBarUpload = findViewById(R.id.progressBarUpload);
         etProductName = findViewById(R.id.etProductName);
         etProductPrice = findViewById(R.id.etProductPrice);
 
+        rvPerfumes = findViewById(R.id.rvPerfumes);
+        rvPerfumes.setLayoutManager(new LinearLayoutManager(this));
 
-        // تهيئة Firebase
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         databaseRef = FirebaseDatabase.getInstance().getReference();
 
-        // تفعيل اختيار صورة من المعرض
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "الرجاء تسجيل الدخول", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        uid = auth.getCurrentUser().getUid();
+        cartRef = databaseRef.child("cartItems").child(uid);
+
+        adapter = new CartAdapter(this, perfumeList, cartPerfumeIds, false);
+        rvPerfumes.setAdapter(adapter);
+
+        adapter.setOnItemAddListener(position -> {
+            Perfume selected = perfumeList.get(position);
+            addPerfumeToCart(selected);
+        });
+
+        adapter.setOnItemRemoveListener(position -> {
+            Perfume selected = perfumeList.get(position);
+            removePerfumeFromCart(selected);
+        });
+
         pickImage = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 result -> {
                     if (result != null) {
                         selectedImageUri = result;
                         ivSelectedImage.setImageURI(result);
-                        ivSelectedImage.setVisibility(View.VISIBLE);
+                        ivSelectedImage.setVisibility(ImageView.VISIBLE);
                     }
                 });
 
-        // طلب الأذونات المناسبة
         requestReadMediaImagesPermission = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
@@ -118,7 +142,6 @@ public class products extends AppCompatActivity {
                 isGranted -> {
                 });
 
-        // التعامل مع النقر على الصورة أو زر اختيار صورة
         ivSelectedImage.setOnClickListener(v -> {
             checkAndRequestPermissions();
             pickImage.launch("image/*");
@@ -129,20 +152,15 @@ public class products extends AppCompatActivity {
             pickImage.launch("image/*");
         });
 
-        // زر إضافة العطر الجديد
-        btnAddPerfume.setOnClickListener(v -> {
-            addNewPerfume();
-        });
+        btnAddPerfume.setOnClickListener(v -> addNewPerfume());
 
-        // زر الذهاب للسلة
-        btnYourCart.setOnClickListener(v -> {
-            startActivity(new Intent(this, cart.class));
-        });
+        btnYourCart.setOnClickListener(v -> startActivity(new Intent(this, cart.class)));
+
+        loadPerfumesFromFirebase();
+
+        loadCartItemsIds();
     }
 
-    /**
-     * التحقق وطلب الأذونات المناسبة لقراءة الصور من الجهاز
-     */
     private void checkAndRequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_IMAGES)
@@ -161,126 +179,158 @@ public class products extends AppCompatActivity {
         }
     }
 
-    /**
-     * دالة إضافة عطر جديد
-     * تتحقق من إدخال البيانات، ثم ترفع الصورة، وبعدها تحفظ العطر في قاعدة البيانات
-     */
     private void addNewPerfume() {
-        String name = tvProductName.getText().toString().trim();
-        String price = tvProductPrice.getText().toString().trim();
+        String name = etProductName.getText().toString().trim();
+        String price = etProductPrice.getText().toString().trim();
 
-        // التحقق من وجود اسم وسعر العطر
         if (name.isEmpty() || price.isEmpty()) {
             Toast.makeText(this, "يرجى إدخال اسم العطر والسعر", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // التحقق من اختيار صورة للعطر
         if (selectedImageUri == null) {
             Toast.makeText(this, "يرجى اختيار صورة للعطر", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // رفع الصورة وحفظ بيانات العطر
         uploadPerfumeImageAndSave(selectedImageUri, name, price);
     }
 
-    /**
-     * رفع صورة العطر إلى Firebase Storage ثم حفظ بيانات العطر في قاعدة البيانات
-     * @param imageUri رابط الصورة المختارة
-     * @param name اسم العطر
-     * @param price سعر العطر
-     */
     private void uploadPerfumeImageAndSave(Uri imageUri, String name, String price) {
-        progressBarUpload.setVisibility(View.VISIBLE);
-
-        // اسم الملف في التخزين، يتم توليده بشكل فريد
+        progressBarUpload.setVisibility(ProgressBar.VISIBLE);
         String fileName = "perfume_images/" + System.currentTimeMillis() + ".jpg";
         StorageReference imageRef = storageRef.child(fileName);
 
-        // رفع الملف
         imageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot ->
-                        // الحصول على رابط التحميل بعد الرفع
                         imageRef.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     String downloadUrl = uri.toString();
-                                    // حفظ بيانات العطر مع رابط الصورة
                                     savePerfumeToDatabase(name, price, downloadUrl);
                                 })
                                 .addOnFailureListener(e -> {
-                                    progressBarUpload.setVisibility(View.GONE);
+                                    progressBarUpload.setVisibility(ProgressBar.GONE);
                                     Toast.makeText(this, "فشل الحصول على رابط الصورة: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 })
                 )
                 .addOnFailureListener(e -> {
-                    progressBarUpload.setVisibility(View.GONE);
+                    progressBarUpload.setVisibility(ProgressBar.GONE);
                     Toast.makeText(this, "فشل رفع صورة العطر: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    /**
-     * حفظ العطر في قاعدة بيانات Firebase Realtime Database
-     * @param name اسم العطر
-     * @param price سعر العطر
-     * @param imageUrl رابط صورة العطر
-     */
     private void savePerfumeToDatabase(String name, String price, String imageUrl) {
         String perfumeId = databaseRef.child("perfumes").push().getKey();
 
         if (perfumeId == null) {
             Toast.makeText(this, "خطأ في إنشاء معرف للعطر", Toast.LENGTH_SHORT).show();
-            progressBarUpload.setVisibility(View.GONE);
+            progressBarUpload.setVisibility(ProgressBar.GONE);
             return;
         }
 
-        // إنشاء كائن العطر
         Perfume perfume = new Perfume(perfumeId, name, price, imageUrl);
 
-        // حفظه في المسار perfumes/perfumeId
         databaseRef.child("perfumes").child(perfumeId).setValue(perfume)
                 .addOnSuccessListener(unused -> {
-                    progressBarUpload.setVisibility(View.GONE);
+                    progressBarUpload.setVisibility(ProgressBar.GONE);
                     Toast.makeText(this, "تمت إضافة العطر بنجاح", Toast.LENGTH_SHORT).show();
                     clearInputs();
                 })
                 .addOnFailureListener(e -> {
-                    progressBarUpload.setVisibility(View.GONE);
+                    progressBarUpload.setVisibility(ProgressBar.GONE);
                     Toast.makeText(this, "فشل إضافة العطر: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    /**
-     * مسح الحقول بعد إضافة العطر بنجاح
-     */
     private void clearInputs() {
-        tvProductName.setText("");
-        tvProductPrice.setText("");
+        etProductName.setText("");
+        etProductPrice.setText("");
         ivSelectedImage.setImageURI(null);
-        ivSelectedImage.setVisibility(View.GONE);
+        ivSelectedImage.setVisibility(ImageView.GONE);
         selectedImageUri = null;
     }
 
-    // عرض قائمة المينيو في التولبار
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu); // تأكد أن الملف موجود في res/menu
-        return true;
+    private void loadPerfumesFromFirebase() {
+        databaseRef.child("perfumes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                perfumeList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    Perfume perfume = ds.getValue(Perfume.class);
+                    if (perfume != null) {
+                        perfumeList.add(perfume);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(products.this, "فشل تحميل العطور", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    // التعامل مع الضغط على عناصر المينيو
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.itmLogOut) {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "تم تسجيل الخروج", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, sign_up.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-            return true;
+    private void loadCartItemsIds() {
+        cartRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cartPerfumeIds.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    CartItem item = ds.getValue(CartItem.class);
+                    if (item != null) {
+                        cartPerfumeIds.add(item.perfumeId);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(products.this, "فشل تحميل السلة: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addPerfumeToCart(Perfume perfume) {
+        if (perfume == null) return;
+
+        // المفتاح هنا هو perfumeId
+        cartRef.child(perfume.getId()).setValue(new CartItem(perfume.getId(), perfume.getName(), perfume.getPrice(), perfume.getImageUrl(), 1))
+                .addOnSuccessListener(unused ->
+                        Toast.makeText(this, perfume.getName() + " تم إضافته للسلة", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "فشل إضافة العنصر للسلة: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void removePerfumeFromCart(Perfume perfume) {
+        if (perfume == null) return;
+
+        cartRef.child(perfume.getId()).removeValue()
+                .addOnSuccessListener(unused ->
+                        Toast.makeText(this, perfume.getName() + " تم إزالته من السلة", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "فشل إزالة العنصر من السلة: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    // كلاس مساعد يمثل عنصر في السلة
+    public static class CartItem {
+        public String perfumeId;
+        public String name;
+        public String price;
+        public String imageUrl;
+        public int quantity;
+
+        public CartItem() {
+            // مطلوب من Firebase
         }
-        return super.onOptionsItemSelected(item);
+
+        public CartItem(String perfumeId, String name, String price, String imageUrl, int quantity) {
+            this.perfumeId = perfumeId;
+            this.name = name;
+            this.price = price;
+            this.imageUrl = imageUrl;
+            this.quantity = quantity;
+        }
     }
 }

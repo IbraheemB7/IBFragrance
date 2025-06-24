@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,9 +8,6 @@
     android:padding="16dp"
     tools:context=".checkout">
 
-    <!-- Checkout Title -->
-
-    <!-- Total Price Section -->
     <TextView
         android:id="@+id/tvCheckout"
         android:layout_width="wrap_content"
@@ -20,7 +18,6 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,38 +25,36 @@
         android:id="@+id/tvTotalPriceCheckout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total: $0.00"
-        android:textSize="20sp"
-        android:textColor="#FF5722"
-        android:textStyle="bold"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvCheckout"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        android:text="Total Price: 0.00 ₪"
+        android:textColor="#FF5722"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCheckout" />
 
-    <!-- Billing Information Section -->
     <TextView
         android:id="@+id/tvBillingInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Billing Information"
-        android:textSize="18sp"
-        android:textColor="#333333"
-        android:textStyle="bold"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTotalPriceCheckout"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Billing Information"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTotalPriceCheckout" />
 
-    <!-- Name Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="Full Name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvBillingInfo"
-        android:hint="Full Name">
+        app:layout_constraintTop_toBottomOf="@id/tvBillingInfo">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etFullName"
@@ -70,15 +65,14 @@
             android:textColorHint="#777777" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Email Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="Email Address"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameLayout"
-        android:hint="Email">
+        app:layout_constraintTop_toBottomOf="@id/nameLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etEmail"
@@ -89,7 +83,6 @@
             android:textColorHint="#777777" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Shipping Information Section -->
     <TextView
         android:id="@+id/tvShippingInfo"
         android:layout_width="wrap_content"
@@ -102,15 +95,14 @@
         app:layout_constraintTop_toBottomOf="@id/emailLayout"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Address Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/addressLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="Shipping Address"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvShippingInfo"
-        android:hint="Shipping Address">
+        app:layout_constraintTop_toBottomOf="@id/tvShippingInfo">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etShippingAddress"
@@ -121,15 +113,14 @@
             android:textColorHint="#777777" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Phone Number Field -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phoneLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="Phone Number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addressLayout"
-        android:hint="Phone Number">
+        app:layout_constraintTop_toBottomOf="@id/addressLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPhoneNumber"
@@ -140,16 +131,17 @@
             android:textColorHint="#777777" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Place Order Button -->
     <Button
         android:id="@+id/btnPlaceOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/black"
-        android:text="Place Order"
+        android:text="Palce Order"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/phoneLayout"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintTop_toBottomOf="@id/phoneLayout"/>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
